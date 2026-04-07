@@ -1,0 +1,59 @@
+Título de Propiedad,
+Si,Mayoritariamente las familias poseen título de propiedad
+No,Mayoritariamente las familias no poseen título de propiedad
+,
+Clasificación barrio,
+Asentamiento,"Barrios cuyos conjuntos de viviendas buscan mantener la trama urbana como continuidad del tejido de la ciudad formal. Los terrenos se encuentran, en su mayoría, subdivididos en parcelas que conforman manzanas, respetando el trazado de las calles. En muchos casos sereservaron lugares para equipamiento y espacios verdes. La densidadpoblacional suele ser menor que en las villas."
+Villa,"Barrios cuyos conjuntos de viviendas conforman una trama urbana irregular, es decir, no son barrios amanzanados. En estos barrios se circula mayoritariamente a través de pasillos estrechos y, especialmente en grandes ciudades, tienden a crecer en altura ya que la disponibilidad de suelo es escasa o nula. Presentan una alta o media densidad poblacional y generalmente se encuentran localizadas cercanas a centros de producción y de consumo y en terrenos cercanos a vías del ferrocarril y cursos de agua."
+Conjunto habitacional unifamiliar,Barrios compuestos por viviendas particulares ubicadas en lotes individuales las cuales fueron construidas en el marco de programas estatales que no cuentan con regularidad dominial ni acceso formal a 2 de 3 servicios básicos.
+,
+MODO DE ACCESO A LOS SERVICIOS,
+Energía eléctrica,
+Conexión formal a la red con medidor domiciliario con factura,Modo óptimo y seguro de conexión. Servicio operado y mantenido por la prestadora.
+Conexión regular a la red con medidor domiciliario pero sin factura,No se paga por el servicio y quien lo recibe no está registrado como usuario/a.
+Conexión regular a la red con medidor domiciliario con consumo limitado,"Conexión de menor potencia que dificulta o impide el uso de electrodomésticos de alto consumo tales como freezer, horno eléctrico, estufa eléctrica, aire acondicionado."
+Conexión regular a la red con medidor prepago,"Las familias deben ir a un kiosco, local de pago de servicios o mediante el uso de una app, para cargar saldo a su cuenta y así tener electricidad. Si se queda sin crédito se corta el suministro."
+Conexión a la red con medidor compartido,Dos o más domicilios comparten un único medidor y los gastos mensuales correspondientes.
+Conexión a la red con medidor comunitario,"Generalmente se encuentra en altura, mide el consumo de todas las viviendas que se encuentran conectadas al mismo y es el Estado quien se hace cargo del costo mensual."
+Conexión irregular a la red,"Enganchados a la red, cables a los postes de luz de la calle, de una familia a otra, etc."
+No tiene conexión eléctrica,No acceden a la red ni a ningún modo alternativo.
+Energía solar,Modo alternativo.
+Generador eléctrico a combustión,Modo alternativo.
+,
+Efluentes cloacales,
+Conexión formal a la red cloacal,Modo óptimo y seguro de conexión. Servicio operado y mantenido por la prestadora.
+Red cloacal conectada a la red pluvial,Conexión formal pero conectada con el alcantarillado o con el desagüe pluvial.
+Conexión irregular a la red cloacal,Enganchados informalmente a las cañerías colectoras de la red.
+Desagüe a cámara séptica y pozo ciego,La cámara séptica es una estructura que permite el tratamiento básico de las aguas residuales de las viviendas.
+Desagüe sólo a pozo negro/ciego u hoyo,Excavación en el terreno que recibe la descarga de las aguas negras.
+Baño seco,"Tipo de baño ecológico que se caracteriza por no utilizar agua entubada, sino que aprovecha las capacidades de la compostación y la desecación para degradar la materia fecal."
+Desagüe a intemperie o cuerpo de agua,"Drena directo a la calle, zanja, arroyo, etc."
+,
+Agua corriente,
+Conexión formal a la red de agua con factura,Modo óptimo y seguro de la conexión a la red de agua corriente. Servicio operado y mantenido por la prestadora.
+Conexión regular a la red de agua pero sin factura,No se paga por el servicio de agua corriente y quien lo recibe no está registrado como usuario/a.
+Conexión regular a la red de agua con tarifa compartida,Dos o más domicilios comparten una única conexión formal a la red y los gastos mensuales correspondientes.
+Conexión irregular a la red de agua,Enganchados informalmente a la red de agua corriente.
+Bomba de agua de pozo domiciliaria,"Se extrae el agua de las napas freáticas, contando cada familia con su propia bomba."
+Bomba de agua de pozo comunitaria,"Se extrae el agua de las napas freáticas, habiendo una bomba comunitaria."
+Canilla comunitaria dentro del barrio,Se accede al agua mediante canillas de libre acceso ubicadas en la vía pública.
+Camión cisterna,Regularmente un camión trae agua al barrio para que sus habitantes se puedan abastecer.
+Acarreo de baldes/recipientes desde fuera del barrio,No hay ninguna fuente de agua corriente en el barrio por lo que se debe buscar fuera del mismo.
+"Vertiente, arroyo, río o canal",Se consume agua proveniente de una fuente natural.
+Cosecha/Recolección de agua de lluvia,Se consume agua proveniente de la recolección del agua que cae de la lluvia.
+,
+Gas Natural - Cocina,
+Conexión formal a la red de gas con factura,Modo óptimo y seguro de la conexión a la red de gas natural. Servicio operado y mantenido por la prestadora.
+Conexión irregular a la red de gas,Enganchados informalmente a la red de gas natural.
+Gas en garrafa,Gas envasado que las familias se autoproveen.
+Leña o carbón,Se genera calor a través de la quema de estos elementos.
+Energía eléctrica,microondas/calentador/horno eléctrico.
+,
+Gas Natural - Calefacción,
+Conexión formal a la red de gas con factura,Modo óptimo y seguro de la conexión a la red de gas natural. Servicio operado y mantenido por la prestadora.
+Conexión irregular a la red de gas,Enganchados informalmente a la red de gas natural.
+Gas en garrafa,Gas envasado que las familias se autoproveen.
+Leña o carbón,Se genera calor a través de la quema de estos elementos.
+Energía eléctrica,estufa eléctrica/resistencia.
+Inexistente,No acceden a la red ni a ningún modo alternativo. El clima del lugar es favorable por lo que no es necesario el uso de artefactos para calefaccionar.
+Sin datos,Celda vacía a la que le pusimos esta denominación para que contabilice en el panel

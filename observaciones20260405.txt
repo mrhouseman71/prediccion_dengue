@@ -1,0 +1,119 @@
+
+ FECHA    TMAX  TMIN  NOMBRE                                                                         
+ -------- ----- ----- ----------------------------------------                                       
+ 05042026  19.5  12.5 AEROPARQUE AERO                                                                
+ 05042026  17.6   2.9 AZUL AERO                                                                      
+ 05042026  19.7   3.1 BAHIA BLANCA AERO                                                              
+ 05042026  17.8   9.5 BARILOCHE AERO                                                                 
+ 05042026 -12.0 -16.9 BASE BELGRANO II                                                               
+ 05042026   3.4   1.8 BASE CARLINI (EX JUBANY)                                                       
+ 05042026   6.4  -0.1 BASE ESPERANZA                                                                 
+ 05042026   1.6  -4.6 BASE MARAMBIO                                                                  
+ 05042026  -0.9  -3.0 BASE ORCADAS                                                                   
+ 05042026   5.2   0.0 BASE SAN MARTIN                                                                
+ 05042026  16.0   4.8 BENITO JUAREZ AERO                                                             
+ 05042026  31.0  18.0 BERNARDO DE IRIGOYEN AERO                                                      
+ 05042026  18.1   5.5 BOLIVAR AERO                                                                   
+ 05042026  20.3  12.3 BUENOS AIRES OBSERVATORIO                                                      
+ 05042026         9.3 CAMPO DE MAYO AERO                                                             
+ 05042026  18.5  12.2 CATAMARCA AERO                                                                 
+ 05042026  17.7  13.8 CERES AERO                                                                     
+ 05042026  17.7  10.1 CHAMICAL AERO                                                                  
+ 05042026  16.0   6.5 CHAPELCO AERO                                                                  
+ 05042026  16.0  13.5 CHEPES                                                                         
+ 05042026  21.9   5.4 COMODORO RIVADAVIA AERO                                                        
+ 05042026  18.7  13.4 CONCORDIA AERO                                                                 
+ 05042026  13.0  11.1 CORDOBA AERO                                                                   
+ 05042026  15.0  11.8 CORDOBA OBSERVATORIO                                                           
+ 05042026  17.7   1.4 CORONEL SUAREZ AERO                                                            
+ 05042026  24.6  19.7 CORRIENTES AERO                                                                
+ 05042026  19.2   6.6 DOLORES AERO                                                                   
+ 05042026  21.5   5.6 EL BOLSON AERO                                                                 
+ 05042026  15.5   2.4 EL CALAFATE AERO                                                               
+ 05042026  19.8  10.5 EL PALOMAR AERO                                                                
+ 05042026        11.0 ESCUELA DE AVIACION MILITAR AERO                                               
+ 05042026  19.0   3.6 ESQUEL AERO                                                                    
+ 05042026  19.2   7.6 EZEIZA AERO                                                                    
+ 05042026  33.5  22.2 FORMOSA AERO                                                                   
+ 05042026  17.4   7.4 GENERAL PICO AERO                                                              
+ 05042026  18.0   1.0 GOBERNADOR GREGORES AERO                                                       
+ 05042026  18.5  13.4 GUALEGUAYCHU AERO                                                              
+ 05042026  35.5  20.4 IGUAZU AERO                                                                    
+ 05042026  30.6  20.0 ITUZAINGO                                                                      
+ 05042026  16.5  10.9 JACHAL                                                                         
+ 05042026  23.3  17.0 JUJUY AERO                                                                     
+ 05042026  23.1  15.1 JUJUY U N                                                                      
+ 05042026  19.7   8.0 JUNIN AERO                                                                     
+ 05042026  19.4   7.0 LA PLATA AERO                                                                  
+ 05042026  20.4   4.3 LA QUIACA OBSERVATORIO                                                         
+ 05042026  17.6  11.8 LA RIOJA AERO                                                                  
+ 05042026  15.6   9.6 LABOULAYE AERO                                                                 
+ 05042026  19.8   5.5 LAS FLORES                                                                     
+ 05042026  31.6  22.8 LAS LOMITAS                                                                    
+ 05042026  17.6   5.5 MALARGUE AERO                                                                  
+ 05042026  14.7   9.0 MAQUINCHAO                                                                     
+ 05042026  17.5   8.8 MAR DEL PLATA AERO                                                             
+ 05042026  15.8  11.1 MARCOS JUAREZ AERO                                                             
+ 05042026        10.0 MARIANO MORENO AERO                                                            
+ 05042026  16.9  12.0 MENDOZA AERO                                                                   
+ 05042026  15.5  11.5 MENDOZA OBSERVATORIO                                                           
+ 05042026  22.6  16.1 MERCEDES AERO (CTES)                                                           
+ 05042026         8.5 MERLO AERO                                                                     
+ 05042026  23.2   9.5 METAN                                                                          
+ 05042026  19.8  14.0 MONTE CASEROS AERO                                                             
+ 05042026  19.3  10.7 MORON AERO                                                                     
+ 05042026  21.2  11.8 NEUQUEN AERO                                                                   
+ 05042026  20.1   7.4 NUEVE DE JULIO                                                                 
+ 05042026         4.5 OLAVARRIA AERO                                                                 
+ 05042026  26.2  21.1 ORAN AERO                                                                      
+ 05042026  15.9  13.0 PARANA AERO                                                                    
+ 05042026  18.9  -1.1 PASO DE INDIOS                                                                 
+ 05042026  24.1  15.9 PASO DE LOS LIBRES AERO                                                        
+ 05042026  19.2   7.4 PEHUAJO AERO                                                                   
+ 05042026  16.4  -2.0 PERITO MORENO AERO                                                             
+ 05042026  17.1   5.2 PIGUE AERO                                                                     
+ 05042026  13.7   9.0 PILAR OBSERVATORIO                                                             
+ 05042026  32.4  21.9 POSADAS AERO                                                                   
+ 05042026  27.9  21.1 PRESIDENCIA ROQUE SAENZ PEÑA AERO                                              
+ 05042026  22.0   5.8 PUERTO DESEADO AERO                                                            
+ 05042026  17.8   6.2 PUERTO MADRYN AERO                                                             
+ 05042026  19.6   8.0 PUNTA INDIO B.A.                                                               
+ 05042026  16.5  13.4 RAFAELA AERO                                                                   
+ 05042026  22.5  14.0 RECONQUISTA AERO                                                               
+ 05042026  25.9  19.6 RESISTENCIA AERO                                                               
+ 05042026  13.7   9.7 RIO CUARTO AERO                                                                
+ 05042026  15.6   1.0 RIO GALLEGOS AERO                                                              
+ 05042026  13.6   2.1 RIO GRANDE B.A.                                                                
+ 05042026  31.5  16.8 RIVADAVIA                                                                      
+ 05042026  18.4  12.7 ROSARIO AERO                                                                   
+ 05042026  21.8  15.0 SALTA AERO                                                                     
+ 05042026  19.3   2.0 SAN ANTONIO OESTE AERO                                                         
+ 05042026  19.0  12.2 SAN FERNANDO AERO                                                              
+ 05042026  20.0  14.0 SAN JUAN AERO                                                                  
+ 05042026  14.6   2.4 SAN JULIAN AERO                                                                
+ 05042026  16.4  11.7 SAN LUIS AERO                                                                  
+ 05042026  15.8  11.9 SAN MARTIN (MZA)                                                               
+ 05042026  15.4   9.9 SAN RAFAEL AERO                                                                
+ 05042026  17.2   2.4 SANTA CRUZ AERO                                                                
+ 05042026  19.0   6.8 SANTA ROSA AERO                                                                
+ 05042026  15.2   9.6 SANTA ROSA DE CONLARA AERO                                                     
+ 05042026  19.4  12.8 SANTIAGO DEL ESTERO AERO                                                       
+ 05042026  17.1  13.7 SAUCE VIEJO AERO                                                               
+ 05042026  17.2  13.4 SUNCHALES AERO                                                                 
+ 05042026  16.9   4.8 TANDIL AERO                                                                    
+ 05042026  26.8  18.0 TARTAGAL AERO                                                                  
+ 05042026  20.2  14.0 TERMAS DE RIO HONDO AERO                                                       
+ 05042026  20.0  14.0 TINOGASTA                                                                      
+ 05042026  20.0   4.8 TRELEW AERO                                                                    
+ 05042026  19.5   7.5 TRENQUE LAUQUEN                                                                
+ 05042026  18.1   9.3 TRES ARROYOS                                                                   
+ 05042026  21.4  13.5 TUCUMAN AERO                                                                   
+ 05042026  12.0   5.0 USHUAIA AERO                                                                   
+ 05042026  21.5   5.0 USPALLATA                                                                      
+ 05042026  17.7  10.0 VENADO TUERTO AERO                                                             
+ 05042026             VICTORICA                                                                      
+ 05042026  18.9   2.2 VIEDMA AERO                                                                    
+ 05042026  14.0  10.4 VILLA DE MARIA DEL RIO SECO                                                    
+ 05042026  15.0  11.7 VILLA DOLORES AERO                                                             
+ 05042026  17.4   9.3 VILLA GESELL AERO                                                              
+ 05042026  13.6   9.5 VILLA REYNOLDS AERO                                                            
