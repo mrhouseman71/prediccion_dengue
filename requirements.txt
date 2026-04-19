@@ -1,0 +1,12 @@
+pandas
+numpy
+matplotlib
+seaborn
+requests
+scikit-learn
+xgboost
+openpyxl
+xarray
+netCDF4
+scipy
+earthengine-api
