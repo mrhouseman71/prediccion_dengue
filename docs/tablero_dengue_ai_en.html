@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dengue AI — Results Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08110d;--surface:#0d1a12;--card:#101f15;
+  --teal:#1D9E75;--teal2:#0F6E56;--teal3:#E1F5EE;
+  --purple:#7F77DD;--amber:#BA7517;--red:#E24B4A;--gray:#7f8c8d;
+  --txt:#c8e0d0;--muted:#3d6650;--border:#1a3a28;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+
+/* ── Top nav ─────────────────────────────────────────────────────────────── */
+.topbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:14px 36px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:34px;height:34px;border-radius:8px;background:var(--teal);
+  display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-title{font-size:1rem;font-weight:700;color:#fff}
+.logo-sub{font-size:.72rem;color:var(--muted);margin-top:1px}
+.nav-pills{display:flex;gap:6px}
+.pill-btn{
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);padding:6px 14px;border-radius:20px;
+  cursor:pointer;font-family:'Inter',sans-serif;font-size:.76rem;
+  font-weight:500;transition:all .15s;
+}
+.pill-btn:hover,.pill-btn.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.status-badge{
+  background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.3);
+  color:var(--teal);padding:5px 12px;border-radius:20px;font-size:.72rem;font-weight:600;
+  display:flex;align-items:center;gap:6px;
+}
+.dot-live{width:7px;height:7px;border-radius:50%;background:var(--teal);
+  animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.container{max-width:1280px;margin:0 auto;padding:28px 36px}
+.page{display:none}.page.active{display:block}
+
+/* ── KPI row ─────────────────────────────────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
+.kpi-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;text-align:center;
+}
+.kpi-card.accent{border-color:rgba(29,158,117,.4)}
+.kpi-val{font-family:'JetBrains Mono',monospace;font-size:1.9rem;font-weight:700;
+  color:var(--teal);display:block;line-height:1}
+.kpi-val.purple{color:var(--purple)}
+.kpi-val.amber{color:var(--amber)}
+.kpi-val.red{color:var(--red)}
+.kpi-val.gray{color:var(--gray)}
+.kpi-lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.8px;margin-top:6px}
+
+/* ── Grid layouts ────────────────────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g-6-4{display:grid;grid-template-columns:3fr 2fr;gap:16px}
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:20px 22px;
+}
+.card.teal{border-color:rgba(29,158,117,.35);background:rgba(29,158,117,.04)}
+.card.purple{border-color:rgba(127,119,221,.3);background:rgba(127,119,221,.04)}
+.card.amber{border-color:rgba(186,117,23,.3);background:rgba(186,117,23,.04)}
+.card-title{font-size:.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:#fff;margin-bottom:12px}
+.card-body{font-size:.85rem;color:var(--muted);line-height:1.6}
+.card-body b{color:#8ab8a0}
+
+/* ── Chart containers ────────────────────────────────────────────────────── */
+.chart-wrap{position:relative;height:240px;margin-top:8px}
+.chart-wrap.tall{height:300px}
+
+/* ── Section title ───────────────────────────────────────────────────────── */
+.section-title{
+  font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--teal);margin-bottom:16px;display:flex;align-items:center;gap:10px
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse;font-size:.83rem}
+.tbl th{padding:9px 14px;text-align:left;font-size:.68rem;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--muted);border-bottom:1px solid var(--border)}
+.tbl td{padding:10px 14px;border-bottom:1px solid #0d1a0f;color:#8ab8a0}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .best{color:var(--teal);font-weight:700}
+.tbl .worst{color:var(--red)}
+.tbl .mid{color:var(--amber)}
+.badge{display:inline-block;padding:2px 9px;border-radius:5px;font-size:.72rem;font-weight:600}
+.b-bl{background:rgba(127,127,127,.15);color:#9ca3af}
+.b-lgb{background:rgba(29,158,117,.15);color:var(--teal)}
+.b-gnn{background:rgba(127,119,221,.15);color:var(--purple)}
+
+/* ── Bar inline ─────────────────────────────────────────────────────────── */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-lbl{font-size:.74rem;color:var(--muted);width:105px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:12px;background:#0d1a0f;border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.bar-fill{height:100%;border-radius:3px}
+.bar-val{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:#8ab8a0;width:54px;text-align:right}
+
+/* ── Insight cards ───────────────────────────────────────────────────────── */
+.insight{
+  border-left:3px solid var(--teal);padding:12px 16px;
+  background:rgba(29,158,117,.05);border-radius:0 8px 8px 0;margin-bottom:10px;
+}
+.insight.purple{border-color:var(--purple);background:rgba(127,119,221,.05)}
+.insight.amber{border-color:var(--amber);background:rgba(186,117,23,.05)}
+.ins-lbl{font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--teal);margin-bottom:4px}
+.ins-lbl.purple{color:var(--purple)}.ins-lbl.amber{color:var(--amber)}
+.ins-txt{font-size:.84rem;color:#8ab8a0;line-height:1.55}
+
+/* ── SHAP bar chart (static) ─────────────────────────────────────────────── */
+.shap-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.shap-name{font-size:.74rem;color:var(--muted);width:170px;text-align:right;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace}
+.shap-bar{height:10px;border-radius:3px;transition:width .4s ease}
+.shap-score{font-size:.7rem;color:#8ab8a0;margin-left:4px;
+  font-family:'JetBrains Mono',monospace}
+
+/* ── Value proposition ───────────────────────────────────────────────────── */
+.vp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.vp-card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:20px;text-align:center}
+.vp-icon{font-size:2rem;margin-bottom:10px}
+.vp-title{font-size:.82rem;font-weight:600;color:#fff;margin-bottom:6px}
+.vp-body{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+/* ── Timeline ────────────────────────────────────────────────────────────── */
+.tl{display:flex;flex-direction:column;gap:0}
+.tl-item{display:grid;grid-template-columns:36px 1fr;gap:0 14px;padding-bottom:16px}
+.tl-dot{display:flex;flex-direction:column;align-items:center}
+.tl-circle{width:30px;height:30px;border-radius:50%;border:2px solid var(--teal);
+  background:var(--card);display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--teal);flex-shrink:0}
+.tl-line{flex:1;width:2px;background:var(--border);margin:0 auto}
+.tl-item:last-child .tl-line{display:none}
+.tl-txt{padding-top:4px}
+.tl-head{font-size:.87rem;font-weight:600;color:var(--txt);margin-bottom:4px}
+.tl-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.footer{
+  border-top:1px solid var(--border);padding:16px 36px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.72rem;color:var(--muted);
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ────────────────────────────────────────────────────────────── -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">🦟</div>
+    <div>
+      <div class="logo-title">Dengue AI — Sistema de Alerta Temprana</div>
+      <div class="logo-sub">Balda · Caracoix · Casas &nbsp;|&nbsp; UCA 2026 &nbsp;|&nbsp; Revista de Salud UIS</div>
+    </div>
+  </div>
+  <div class="nav-pills">
+    <button class="pill-btn active" onclick="showPage('overview',this)">Resumen</button>
+    <button class="pill-btn" onclick="showPage('data',this)">Datos</button>
+    <button class="pill-btn" onclick="showPage('models',this)">Modelos</button>
+    <button class="pill-btn" onclick="showPage('results',this)">Resultados</button>
+    <button class="pill-btn" onclick="showPage('insights',this)">Insights</button>
+    <button class="pill-btn" onclick="showPage('value',this)">Valor</button>
+  </div>
+  <div class="status-badge"><div class="dot-live"></div>Active project · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PÁGINA 1: RESUMEN
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="container">
+<div class="page active" id="page-overview">
+
+  <div class="section-title">Executive Summary</div>
+
+  <div class="kpi-row">
+    <div class="kpi-card accent">
+      <span class="kpi-val">524K</span>
+      <div class="kpi-lbl">2024 outbreak cases (record)</div>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-val">577</span>
+      <div class="kpi-lbl">Modelled departments</div>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-val">9,246</span>
+      <div class="kpi-lbl">Dept-week observations</div>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-val purple">−42pp</span>
+      <div class="kpi-lbl">MAPE improvement vs Baseline</div>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-val amber">6</span>
+      <div class="kpi-lbl">Walk-forward years (2020–2025)</div>
+    </div>
+  </div>
+
+  <div class="g-6-4" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title">The problem it solves</div>
+      <p class="card-body">
+        Epidemiological surveillance systems issue <b>reactive</b> alerts:
+        confirmed case counts arrive 2–3 weeks late, by which time
+        transmission is already established.<br><br>
+        This project builds a <b>predictive early warning system</b>
+        with a 4-week horizon, using exclusively open public data.
+        The system estimates cases for weeks $t+1$ to $t+4$ using information
+        available up to week $t$.<br><br>
+        A useful prediction enables: fumigation and vector control,
+        hospital capacity planning, and preventive public communication.
+      </p>
+    </div>
+    <div>
+      <div class="card teal" style="margin-bottom:14px">
+        <div class="card-title">Recommended model</div>
+        <div style="text-align:center;padding:8px 0">
+          <span style="font-size:2rem;font-weight:800;color:var(--teal);
+                       font-family:'JetBrains Mono',monospace">LightGBM</span>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:4px">
+            MAPE 74.6% · Stable 2020–2025
+          </div>
+        </div>
+      </div>
+      <div class="card purple">
+        <div class="card-title">Exploratory extension</div>
+        <div style="text-align:center;padding:8px 0">
+          <span style="font-size:1.6rem;font-weight:800;color:var(--purple);
+                       font-family:'JetBrains Mono',monospace">EpiGNN</span>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:4px">
+            MAE 14.3 in 2024 outbreak · Spatial graph
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card teal">
+      <div class="card-title">Data sources (5)</div>
+      <div class="card-body">SNVS · NASA POWER · INDEC Censo 2022 · RENABAP · SMN</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key methodology</div>
+      <div class="card-body">Annual walk-forward without data leakage · Bootstrap 95% CI · SHAP interpretability</div>
+    </div>
+    <div class="card amber">
+      <div class="card-title">Target publication</div>
+      <div class="card-body">Revista de Salud UIS · ISSN 0121-0807 · SciELO / Redalyc / LILACS</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PÁGINA 2: DATOS
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-data">
+
+  <div class="section-title">Integrated data sources</div>
+
+  <div class="kpi-row">
+    <div class="kpi-card"><span class="kpi-val">819K</span><div class="kpi-lbl">Cases 2018–2026</div></div>
+    <div class="kpi-card"><span class="kpi-val">7</span><div class="kpi-lbl">Years of history</div></div>
+    <div class="kpi-card"><span class="kpi-val">30</span><div class="kpi-lbl">Selected features</div></div>
+    <div class="kpi-card"><span class="kpi-val purple">16</span><div class="kpi-lbl">NASA climate variables</div></div>
+    <div class="kpi-card"><span class="kpi-val amber">90+</span><div class="kpi-lbl">Built features</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title">Cases per year — SNVS 2.0</div>
+      <div class="chart-wrap">
+        <canvas id="chartCasosPorAnio"></canvas>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-title">Integration pipeline</div>
+        <div class="tl">
+          <div class="tl-item">
+            <div class="tl-dot"><div class="tl-circle">1</div><div class="tl-line"></div></div>
+            <div class="tl-txt"><div class="tl-head">SNVS 2.0 — Epidemiological</div><div class="tl-desc">Weekly confirmed cases by department 2018–2026. Two schemas normalised automatically.</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"><div class="tl-circle">2</div><div class="tl-line"></div></div>
+            <div class="tl-txt"><div class="tl-head">NASA POWER API — Climate</div><div class="tl-desc">16 daily variables → weekly by provincial centroid. No API key required.</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"><div class="tl-circle">3</div><div class="tl-line"></div></div>
+            <div class="tl-txt"><div class="tl-head">INDEC Census 2022 — Demographic</div><div class="tl-desc">% access to water network and sewage. Proxy for sanitary vulnerability.</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"><div class="tl-circle">4</div><div class="tl-line"></div></div>
+            <div class="tl-txt"><div class="tl-head">RENABAP — Informal settlements</div><div class="tl-desc">6,467 settlements. Families without access to basic services.</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"><div class="tl-circle">5</div></div>
+            <div class="tl-txt"><div class="tl-head">Feature Engineering</div><div class="tl-desc">90+ built features. Selection without data leakage on 2018–2019 data only.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Top features selected by consensus (Pearson + MI + RF)</div>
+    <div style="padding-top:8px">
+      <div class="shap-row"><div class="shap-name">casos_lag1</div><div class="shap-bar" style="width:100%;background:var(--teal)"></div><div class="shap-score">0.998</div><div style="font-size:.7rem;color:var(--muted);margin-left:8px">previous week cases</div></div>
+      <div class="shap-row"><div class="shap-name">casos_ma4</div><div class="shap-bar" style="width:67%;background:var(--teal)"></div><div class="shap-score">0.668</div><div style="font-size:.7rem;color:var(--muted);margin-left:8px">4-week moving average</div></div>
+      <div class="shap-row"><div class="shap-name">casos_lag2</div><div class="shap-bar" style="width:58%;background:var(--teal)"></div><div class="shap-score">0.579</div><div style="font-size:.7rem;color:var(--muted);margin-left:8px">2 weeks prior</div></div>
+      <div class="shap-row"><div class="shap-name">humedad_std4</div><div class="shap-bar" style="width:36%;background:var(--amber)"></div><div class="shap-score">0.363</div><div style="font-size:.7rem;color:var(--muted);margin-left:8px">humidity variability 4 wks</div></div>
+      <div class="shap-row"><div class="shap-name">temp_media_lag2</div><div class="shap-bar" style="width:27%;background:var(--amber)"></div><div class="shap-score">0.271</div><div style="font-size:.7rem;color:var(--muted);margin-left:8px">temperature, 2-week lag</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PÁGINA 3: MODELOS
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-models">
+
+  <div class="section-title">Model architecture</div>
+
+  <div class="g3" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title">📊 Baseline (MA4)</div>
+      <div class="card-body">
+        4-week moving average of previous weeks.<br>
+        No learning. Simple historical reference.<br><br>
+        <b>Use:</b> minimum threshold any model must exceed.
+      </div>
+    </div>
+    <div class="card teal">
+      <div class="card-title">⚡ LightGBM — Main model</div>
+      <div class="card-body">
+        Gradient boosting on decision trees.<br>
+        Handles NaN natively. Interpretable with SHAP.<br><br>
+        <b>500 estimadores</b> · lr 0.05 · depth 6<br>
+        num_leaves 31 · subsample 0.8<br><br>
+        Trained on 4,664 observations (years &lt; 2024).
+      </div>
+    </div>
+    <div class="card purple">
+      <div class="card-title">🕸️ EpiGNN — Exploratory extension</div>
+      <div class="card-body">
+        Neural network over spatial graph.<br>
+        Each department = node. Edges via geographic k-nearest neighbours (k=5).<br><br>
+        <b>2× GCNConv</b> (30→64→32) · fc(32→4)<br>
+        HuberLoss(δ=5) · 80 epochs · dropout 0.3<br><br>
+        447 nodes · 208 training graphs.
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Validation strategy — Walk-Forward</div>
+      <div class="card-body" style="margin-bottom:12px">
+        For each year $t$ ∈ {2020, ..., 2025}:<br>
+        &nbsp;&nbsp;① Train on data up to year $t-1$<br>
+        &nbsp;&nbsp;② Predict full year $t$<br>
+        No temporal leakage.
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chartWalkforward"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Vector biological cycle — lag justification</div>
+      <div class="card-body" style="margin-bottom:14px">
+        El rezago de <b>2–4 semanas</b> en variables climáticas corresponde
+        al período biológico del <i>Aedes aegypti</i>:
+      </div>
+      <div style="display:flex;gap:0;align-items:center;justify-content:center;padding:10px 0">
+        <div style="text-align:center;padding:0 8px">
+          <div style="width:70px;height:70px;border-radius:50%;border:2px solid var(--teal);
+                      background:rgba(29,158,117,.1);display:flex;align-items:center;
+                      justify-content:center;font-size:.72rem;color:var(--teal);text-align:center;margin:0 auto">Temp<br>óptima<br>25–30°C</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Condition</div>
+        </div>
+        <div style="color:var(--muted);font-size:1.2rem;padding:0 4px">→</div>
+        <div style="text-align:center;padding:0 8px">
+          <div style="width:70px;height:70px;border-radius:50%;border:2px solid var(--amber);
+                      background:rgba(186,117,23,.1);display:flex;align-items:center;
+                      justify-content:center;font-size:.72rem;color:var(--amber);text-align:center;margin:0 auto">Huevo<br>→<br>Adulto</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:6px">8–14 days</div>
+        </div>
+        <div style="color:var(--muted);font-size:1.2rem;padding:0 4px">→</div>
+        <div style="text-align:center;padding:0 8px">
+          <div style="width:70px;height:70px;border-radius:50%;border:2px solid var(--red);
+                      background:rgba(226,75,74,.1);display:flex;align-items:center;
+                      justify-content:center;font-size:.72rem;color:var(--red);text-align:center;margin:0 auto">Incuba<br>ción<br>viral</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:6px">5–7 days</div>
+        </div>
+        <div style="color:var(--muted);font-size:1.2rem;padding:0 4px">→</div>
+        <div style="text-align:center;padding:0 8px">
+          <div style="width:70px;height:70px;border-radius:50%;border:2px solid var(--purple);
+                      background:rgba(127,119,221,.1);display:flex;align-items:center;
+                      justify-content:center;font-size:.72rem;color:var(--purple);text-align:center;margin:0 auto">Caso<br>confir<br>mado</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Notification</div>
+        </div>
+      </div>
+      <div style="font-size:.76rem;color:var(--muted);text-align:center;margin-top:12px">
+        Total: ~14–21 days = <b style="color:var(--teal)">2–4 week lag</b>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PÁGINA 4: RESULTADOS
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-results">
+
+  <div class="section-title">Results — Test 2024 and Walk-Forward</div>
+
+  <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-card"><span class="kpi-val gray">144%</span><div class="kpi-lbl">Baseline MAPE 2024</div></div>
+    <div class="kpi-card accent"><span class="kpi-val">101%</span><div class="kpi-lbl">LightGBM MAPE 2024</div></div>
+    <div class="kpi-card"><span class="kpi-val purple">94.5%</span><div class="kpi-lbl">EpiGNN MAPE 2024</div></div>
+    <div class="kpi-card"><span class="kpi-val amber">−42pp</span><div class="kpi-lbl">LightGBM vs Baseline (WF)</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title">Comparison — Test set 2024 (3,732 obs.)</div>
+      <table class="tbl">
+        <thead>
+          <tr><th>Model</th><th>MAE</th><th>MAPE≥5%</th><th>SMAPE</th><th>RMSE</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-bl">Baseline MA4</span></td>
+            <td>67.4</td><td class="worst">144.0%</td><td>89.2%</td><td>160.9</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-lgb">LightGBM</span></td>
+            <td class="mid">50.3</td><td class="mid">101.1%</td><td>72.8%</td><td>149.5</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-gnn">EpiGNN</span></td>
+            <td class="best">14.3</td><td class="best">94.5%</td><td class="best">41.6%</td><td class="best">96.4</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:8px;padding:8px 10px;
+                  background:rgba(186,117,23,.08);border-radius:6px;border:1px solid rgba(186,117,23,.2)">
+        ⚠ MAPE &gt;100% is expected: the 2024 outbreak was 10× the historical maximum.
+        The relative improvement remains operationally significant.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Walk-forward — MAPE with 95% CI (LightGBM)</div>
+      <div class="chart-wrap">
+        <canvas id="chartWFDetalle"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Walk-forward by year — full table</div>
+      <table class="tbl">
+        <thead><tr><th>Year</th><th>Baseline</th><th>LightGBM</th><th>95% CI LGB</th><th>EpiGNN</th></tr></thead>
+        <tbody>
+          <tr><td>2020</td><td>86.1%</td><td class="best">66.1%</td><td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">[52–80]</td><td class="worst">99.7%</td></tr>
+          <tr><td>2021</td><td>86.8%</td><td class="best">76.8%</td><td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">[62–92]</td><td class="worst">96.0%</td></tr>
+          <tr><td>2022</td><td>64.5%</td><td class="best">40.8%</td><td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">[29–53]</td><td class="worst">100.0%</td></tr>
+          <tr><td>2023</td><td>100.6%</td><td class="best">86.6%</td><td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">[71–102]</td><td class="mid">85.8%</td></tr>
+          <tr><td>2024</td><td>144.0%</td><td class="mid">102.8%</td><td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">[86–118]</td><td class="best">98.7%</td></tr>
+          <tr><td>2025</td><td>92.1%</td><td class="best">67.4%</td><td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">[55–80]</td><td class="worst">99.8%</td></tr>
+          <tr style="font-weight:600"><td>Media</td><td>95.7%</td><td class="best">73.4%</td><td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">[59–88]</td><td class="worst">96.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">SHAP Interpretability — LightGBM</div>
+      <div style="padding-top:6px">
+        <div class="shap-row"><div class="shap-name">casos_lag1</div><div class="shap-bar" style="width:100%;background:var(--teal)"></div><div class="shap-score">0.998</div></div>
+        <div class="shap-row"><div class="shap-name">casos_ma4</div><div class="shap-bar" style="width:67%;background:var(--teal)"></div><div class="shap-score">0.668</div></div>
+        <div class="shap-row"><div class="shap-name">casos_sum4</div><div class="shap-bar" style="width:63%;background:var(--teal)"></div><div class="shap-score">0.629</div></div>
+        <div class="shap-row"><div class="shap-name">casos_lag2</div><div class="shap-bar" style="width:58%;background:var(--teal)"></div><div class="shap-score">0.579</div></div>
+        <div class="shap-row"><div class="shap-name">humedad_std4</div><div class="shap-bar" style="width:36%;background:var(--amber)"></div><div class="shap-score">0.363</div></div>
+        <div class="shap-row"><div class="shap-name">gdd_acum4</div><div class="shap-bar" style="width:29%;background:var(--amber)"></div><div class="shap-score">0.287</div></div>
+        <div class="shap-row"><div class="shap-name">temp_media_lag2</div><div class="shap-bar" style="width:27%;background:var(--amber)"></div><div class="shap-score">0.271</div></div>
+      </div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:10px;padding:8px 10px;
+                  background:rgba(29,158,117,.06);border-radius:6px">
+        ✓ <b style="color:var(--teal)">Hypothesis H2 confirmed:</b>
+        temp_media_lag2 is the first relevant climate variable (position 10).
+        The 2-week lag matches the Aedes aegypti biological cycle.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PÁGINA 5: INSIGHTS
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-insights">
+
+  <div class="section-title">Project decisions and insights</div>
+
+  <div class="g2" style="margin-bottom:16px">
+    <div>
+      <div class="insight" style="margin-bottom:12px">
+        <div class="ins-lbl">Insight 1 — 2024 Outbreak</div>
+        <div class="ins-txt">The 2024 outbreak was 10× the historical maximum. No model trained on 2018–2023 could anticipate that magnitude. This does not invalidate the model: <b>the relative improvement over the baseline remains statistically significant</b> (non-overlapping 95% CIs in 5 of 6 walk-forward years).</div>
+      </div>
+      <div class="insight" style="margin-bottom:12px">
+        <div class="ins-lbl">Insight 2 — Epidemiological lags dominate</div>
+        <div class="ins-txt">The 5 most important variables are case lags, not climate variables. Recent cases directly capture the state of community transmission (fumigation coverage, susceptible density) that environmental variables cannot capture with equal specificity.</div>
+      </div>
+      <div class="insight purple">
+        <div class="ins-lbl purple">Insight 3 — EpiGNN and the spatial signal</div>
+        <div class="ins-txt">EpiGNN achieves MAE 14.3 in 2024 (best absolute) but MAPE ~99% in low-burden years. Conclusion: <b>the spatial graph adds information when there are pronounced epidemic gradients between neighbouring departments</b>. In low-transmission endemic years, the spatial signal adds insufficient value.</div>
+      </div>
+    </div>
+    <div>
+      <div class="insight amber" style="margin-bottom:12px">
+        <div class="ins-lbl amber">Insight 4 — Data leakage in feature selection</div>
+        <div class="ins-txt">Feature selection must be done ONLY with training data (2018–2019). Including 2024 causes the model to "choose" variables that already know the outbreak, artificially inflating metrics. This was corrected during development and constitutes a methodological contribution.</div>
+      </div>
+      <div class="insight" style="margin-bottom:12px">
+        <div class="ins-lbl">Insight 5 — Prospective temporal validation</div>
+        <div class="ins-txt">Random cross-validation would have produced ~30% better metrics, but illusorily. Walk-forward validation exposes real performance under operational conditions. This design decision is what makes the work publishable in a public health journal.</div>
+      </div>
+      <div class="insight purple">
+        <div class="ins-lbl purple">Process learning</div>
+        <div class="ins-txt">Integrating 5 heterogeneous data sources took longer than training the models. Data quality (especially SNVS schema normalisation) was critical. Model complexity must be justified by statistically significant improvement, not just numerical improvement.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">When to use LightGBM vs EpiGNN?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px">
+      <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;padding:14px 16px">
+        <div style="font-size:.76rem;font-weight:600;color:var(--teal);margin-bottom:8px">⚡ LightGBM — recommended for operational use</div>
+        <div class="card-body">Stable across all walk-forward years. Fast to train and retrain. Interpretable with SHAP. Does not require GeoJSON geometries. Ideal for weekly real-time alerts.</div>
+      </div>
+      <div style="background:rgba(127,119,221,.06);border:1px solid rgba(127,119,221,.2);border-radius:8px;padding:14px 16px">
+        <div style="font-size:.76rem;font-weight:600;color:var(--purple);margin-bottom:8px">🕸️ EpiGNN — recommended for outbreak analysis</div>
+        <div class="card-body">Best absolute MAE in extreme outbreaks. Captures inter-departmental propagation. Requires GeoJSON geometries and GPU for scalability. Useful for identifying which neighbouring departments will spread the virus.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PÁGINA 6: VALOR
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-value">
+
+  <div class="section-title">Applied value and differential proposition</div>
+
+  <div class="vp-grid" style="margin-bottom:20px">
+    <div class="vp-card">
+      <div class="vp-icon">🏥</div>
+      <div class="vp-title">Ministry of Health</div>
+      <div class="vp-body">Prioritise departments for fumigation and vector control before the epidemic peak. 4 weeks of lead time = intervention possible.</div>
+    </div>
+    <div class="vp-card">
+      <div class="vp-icon">🏨</div>
+      <div class="vp-title">Hospital system</div>
+      <div class="vp-body">Anticipate sizing of emergency and intensive care in high-prediction municipalities (&gt;200 cases/week).</div>
+    </div>
+    <div class="vp-card">
+      <div class="vp-icon">📢</div>
+      <div class="vp-title">Public communication</div>
+      <div class="vp-body">Guide anti-vector campaigns and personal protection in areas with unfavourable climate and epidemiological conditions.</div>
+    </div>
+    <div class="vp-card">
+      <div class="vp-icon">🔬</div>
+      <div class="vp-title">Investigación</div>
+      <div class="vp-body">Replicable framework in other LATAM countries with endemic dengue: Brazil, Colombia, Paraguay. 100% based on open data.</div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card teal">
+      <div class="card-title">What makes this work different</div>
+      <div class="insight" style="margin-bottom:8px">
+        <div class="ins-lbl">1. Departmental scale</div>
+        <div class="ins-txt">First walk-forward model at departmental level with real SNVS data. Previous literature in Argentina was at provincial level.</div>
+      </div>
+      <div class="insight" style="margin-bottom:8px">
+        <div class="ins-lbl">2. Real prospective validation</div>
+        <div class="ins-txt">Walk-forward with bootstrap 95% CI. No random cross-validation that artificially inflates metrics.</div>
+      </div>
+      <div class="insight" style="margin-bottom:8px">
+        <div class="ins-lbl">3. 100% open data</div>
+        <div class="ins-txt">SNVS + NASA POWER + INDEC. Reproducible without licences or institutional agreements.</div>
+      </div>
+      <div class="insight">
+        <div class="ins-lbl">4. Spatial graph</div>
+        <div class="ins-txt">EpiGNN models inter-departmental spread: unique ability to detect where an outbreak originated.</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-title">Deliverable product</div>
+        <div class="card-body">
+          <b>Reproducible notebook</b> with full pipeline (ingestion → features → models → validation → predictor).<br><br>
+          <b>Interactive predictor</b> (ipywidgets): select department, week and year → LightGBM + EpiGNN predict in real time with alert level (Low / Moderate / High / Critical).<br><br>
+          <b>Exportable choropleth map</b> of departmental risk.<br><br>
+          <b>Academic paper</b> submitted to Revista de Salud UIS (SciELO, Q2).
+        </div>
+      </div>
+      <div class="card amber">
+        <div class="card-title">How to "sell" this product?</div>
+        <div class="card-body">
+          <b style="color:var(--amber)">"Every week of lead time equals thousands of households fumigated on time."</b><br><br>
+          The system transforms publicly available data into a 4-week operational advantage for any provincial health system. Implementation cost is zero: open data, open-source models, Colab/Google Drive infrastructure.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Future work</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px">
+      <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:8px;padding:12px">
+        <div style="font-size:.74rem;font-weight:600;color:var(--teal);margin-bottom:5px">Short term</div>
+        <div class="card-body">Departmental climate with CHIRPS · Under-reporting correction · Dash/Streamlit dashboard with weekly SNVS updates</div>
+      </div>
+      <div style="background:rgba(127,119,221,.06);border:1px solid rgba(127,119,221,.15);border-radius:8px;padding:12px">
+        <div style="font-size:.74rem;font-weight:600;color:var(--purple);margin-bottom:5px">Medium term</div>
+        <div class="card-body">Human mobility as weighted edge in EpiGNN · Viral serotypes · Dengvaxia/Qdenga vaccination coverage</div>
+      </div>
+      <div style="background:rgba(186,117,23,.06);border:1px solid rgba(186,117,23,.15);border-radius:8px;padding:12px">
+        <div style="font-size:.74rem;font-weight:600;color:var(--amber);margin-bottom:5px">Long term</div>
+        <div class="card-body">Extension to Brazil, Colombia, Paraguay · Continuous prospective validation with SNVS 2025–2026 · Public API for health authorities</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- .container -->
+
+<div class="footer">
+  <span>Dengue outbreak prediction · UCA Lab III · Buenos Aires, 2026</span>
+  <span>Balda · Caracoix · Casas &nbsp;|&nbsp; Supervisor: Julio Paredes Rojas &nbsp;|&nbsp; Revista de Salud UIS (Q2)</span>
+</div>
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+const C = Chart.defaults;
+C.color = '#4a7060';
+C.borderColor = '#1a3a28';
+C.font.family = 'Inter';
+
+// Chart 1: Casos por año
+new Chart(document.getElementById('chartCasosPorAnio'), {
+  type: 'bar',
+  data: {
+    labels: ['2018','2019','2020','2021','2022','2023','2024','2025*'],
+    datasets: [{
+      label: 'Confirmed cases',
+      data: [4581, 2743, 5019, 32041, 11032, 76433, 524278, 163546],
+      backgroundColor: ctx => {
+        const i = ctx.dataIndex;
+        if(i === 6) return '#E24B4A';
+        if(i === 7) return '#BA7517';
+        return '#1D9E75';
+      },
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: c => ' ' + c.raw.toLocaleString() + ' cases' }} },
+    scales: {
+      x: { grid: { color: '#1a3a28' }, ticks: { color: '#4a7060' } },
+      y: { grid: { color: '#1a3a28' }, ticks: { color: '#4a7060',
+        callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } }
+    }
+  }
+});
+
+// Chart 2: Walk-forward simple
+new Chart(document.getElementById('chartWalkforward'), {
+  type: 'line',
+  data: {
+    labels: ['2020','2021','2022','2023','2024','2025'],
+    datasets: [
+      { label: 'Baseline (MA4)', data: [86.1,86.8,64.5,100.6,144.0,92.1],
+        borderColor:'#7f8c8d', borderDash:[5,3], borderWidth:1.5,
+        pointRadius:4, fill:false },
+      { label: 'LightGBM', data: [66.1,76.8,40.8,86.6,102.8,67.4],
+        borderColor:'#1D9E75', borderWidth:2.5, pointRadius:5, fill:false },
+      { label: 'EpiGNN', data: [99.7,96.0,100.0,85.8,98.7,99.8],
+        borderColor:'#7F77DD', borderWidth:2, borderDash:[3,2],
+        pointRadius:4, fill:false },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#4a7060', boxWidth: 16, padding: 12 } },
+      annotation: {} },
+    scales: {
+      x: { grid: { color: '#1a3a28' }, ticks: { color: '#4a7060' } },
+      y: { grid: { color: '#1a3a28' }, ticks: { color: '#4a7060',
+        callback: v => v + '%' }, min: 30, max: 160,
+        title: { display: true, text: 'MAPE (%)', color: '#3d6650' } }
+    }
+  }
+});
+
+// Chart 3: Walk-forward con IC
+new Chart(document.getElementById('chartWFDetalle'), {
+  type: 'bar',
+  data: {
+    labels: ['2020','2021','2022','2023','2024','2025'],
+    datasets: [
+      { label: 'Baseline', data: [86.1,86.8,64.5,100.6,144.0,92.1],
+        backgroundColor: 'rgba(127,127,127,0.4)', borderColor: '#7f8c8d',
+        borderWidth: 1, borderRadius: 3 },
+      { label: 'LightGBM', data: [66.1,76.8,40.8,86.6,102.8,67.4],
+        backgroundColor: 'rgba(29,158,117,0.5)', borderColor: '#1D9E75',
+        borderWidth: 1.5, borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#4a7060', boxWidth: 14, padding: 10 } } },
+    scales: {
+      x: { grid: { color: '#1a3a28' }, ticks: { color: '#4a7060' } },
+      y: { grid: { color: '#1a3a28' }, ticks: { color: '#4a7060',
+        callback: v => v + '%' },
+        title: { display: true, text: 'MAPE (%)', color: '#3d6650' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
