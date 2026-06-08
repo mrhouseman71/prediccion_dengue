@@ -295,7 +295,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       <div class="model-tag">Historical reference · No learning</div>
       <div class="model-metrics">
         <div class="m-metric"><div class="m-val" style="color:var(--red)">144%</div><div class="m-lbl">MAPE 2024</div></div>
-        <div class="m-metric"><div class="m-val" style="color:var(--orange)">95.7%</div><div class="m-lbl">MAPE WF Media</div></div>
+        <div class="m-metric"><div class="m-val" style="color:var(--orange)">95.7%</div><div class="m-lbl">MAPE WF AVG</div></div>
       </div>
       <div class="card-body" style="font-size:.8rem">
         Four-week rolling mean. Requires no external variables. Sets the minimum floor any model must beat.
@@ -309,7 +309,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       <div class="model-tag">Main model · Recommended for production</div>
       <div class="model-metrics">
         <div class="m-metric"><div class="m-val" style="color:var(--teal2)">101%</div><div class="m-lbl">MAPE 2024</div></div>
-        <div class="m-metric"><div class="m-val" style="color:var(--teal2)">73.4%</div><div class="m-lbl">MAPE WF Media</div></div>
+        <div class="m-metric"><div class="m-val" style="color:var(--teal2)">73.4%</div><div class="m-lbl">MAPE WF AVG</div></div>
       </div>
       <div class="card-body" style="font-size:.8rem">
         Gradient Boosting on decision trees. Native NaN handling. Interpretable via SHAP. Stable across all walk-forward years.<br><br>
@@ -375,7 +375,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       <div class="sec-title">Test Set 2024 — Extreme Outbreak</div>
       <div class="card">
         <table class="tbl">
-          <thead><tr><th>Modelo</th><th>MAE</th><th>MAPE ≥5%</th><th>SMAPE</th><th>RMSE</th></tr></thead>
+          <thead><tr><th>Model</th><th>MAE</th><th>MAPE ≥5%</th><th>SMAPE</th><th>RMSE</th></tr></thead>
           <tbody>
             <tr><td>Baseline (MA4)</td><td>67.4</td><td class="" style="color:var(--red)">144.0%</td><td>89.2%</td><td>160.9</td></tr>
             <tr><td>LightGBM</td><td>50.3</td><td>101.1%</td><td>72.8%</td><td>149.5</td></tr>
@@ -395,7 +395,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       <div class="sec-title">Full Walk-forward</div>
       <div class="card">
         <table class="tbl">
-          <thead><tr><th>Año</th><th>Baseline</th><th>LightGBM</th><th>IC 95%</th><th>EpiGNN</th></tr></thead>
+          <thead><tr><th>Year</th><th>Baseline</th><th>LightGBM</th><th>IC 95%</th><th>EpiGNN</th></tr></thead>
           <tbody>
             <tr><td>2020</td><td>86.1%</td><td>66.1%</td><td>[52.3–80.4]</td><td>99.7%</td></tr>
             <tr><td>2021</td><td>86.8%</td><td>76.8%</td><td>[61.7–91.9]</td><td>96.0%</td></tr>
@@ -403,7 +403,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
             <tr><td>2023</td><td>100.6%</td><td>86.6%</td><td>[71.3–102.0]</td><td>85.8%</td></tr>
             <tr><td>2024</td><td>144.0%</td><td>102.8%</td><td>[86.1–117.8]</td><td>98.7%</td></tr>
             <tr><td>2025 ★</td><td>92.1%</td><td>67.4%</td><td>[54.8–80.1]</td><td>99.8%</td></tr>
-            <tr style="border-top:1px solid var(--border)"><td><b>Media</b></td><td><b>95.7%</b></td><td class="best"><b>73.4%</b></td><td><b>[59.3–87.5]</b></td><td>96.7%</td></tr>
+            <tr style="border-top:1px solid var(--border)"><td><b>AVG</b></td><td><b>95.7%</b></td><td class="best"><b>73.4%</b></td><td><b>[59.3–87.5]</b></td><td>96.7%</td></tr>
           </tbody>
         </table>
         <div style="font-size:.69rem;color:var(--muted);margin-top:8px">★ 2025: real prospective validation — data unseen during training.</div>
@@ -513,7 +513,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
         <div class="card-title">🧠 Methodological — Decisions That Make the Difference</div>
         <div class="timeline" style="margin-top:8px">
           <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Walk-forward Validation ≠ Random CV</div><div class="tl-body">Random CV would have given metrics ~30% better but illusory. Walk-forward simulates real operational conditions. That decision turns the work into something publishable and deployable.</div></div>
-          <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bootstrap CIs: A Point Estimate Is Not Enough</div><div class="tl-body">Reportar solo el MAPE puntual no informa si la diferencia es estadística o ruido. Los 95% Bootstrap CI permiten afirmar que LightGBM superó al baseline de forma robusta.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bootstrap CIs: A Point Estimate Is Not Enough</div><div class="tl-body">Reporting only the point MAPE does not indicate whether the difference is statistically significant or simply noise. The 95% Bootstrap CI allows us to conclude that LightGBM robustly outperformed the baseline.</div></div>
           <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">The Real Horizon Is 0–1 Weeks</div><div class="tl-body">Lags consume anticipation: in week i, the model uses data up to i−2 and predicts i+1. The real operational lead time is 0–1 week, not 4. Acknowledging this publicly is an honest methodological contribution.</div></div>
           <div class="tl-item"><div class="tl-dot" style="border-color:var(--bg)"></div><div class="tl-title">SHAP Confirms Biology</div><div class="tl-body">That temp_media_lag2 is the key climate predictor, with a lag exactly within the range of the Aedes extrinsic cycle (8–14 days), is an internal model validation: it captures mechanism, not just correlation.</div></div>
         </div>
@@ -578,7 +578,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
     <div class="value-card">
       <div class="value-icon">🔬</div>
       <div class="value-title">Scientific Publication</div>
-      <div class="value-body">El trabajo fue diseñado para publicación en <em>Salud UIS</em> (SciELO, ISSN 0121-0807). La validación walk-forward con 95% Bootstrap CI y la corrección del data leakage son contribuciones metodológicas que distinguen al trabajo de la mayoría de publicaciones existentes.</div>
+      <div class="value-body">The study was designed for publication in <em>Salud UIS</em> (SciELO, ISSN 0121-0807). Walk-forward validation with a 95% Bootstrap CI and correction of data leakage are methodological contributions that distinguish this work from most existing publications.</div>
     </div>
     <div class="value-card">
       <div class="value-icon">📦</div>
